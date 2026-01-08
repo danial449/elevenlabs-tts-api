@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ChatGPT Style UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: #f7f7f8;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Layout */
+  .wrapper {
+    display: flex;
+    height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    background: #202123;
+    color: white;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar h6 {
+    font-size: 14px;
+    color: #ccc;
+  }
+
+  .chat-item {
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .chat-item:hover {
+    background: #343541;
+  }
+
+  .your-chats {
+    margin-top: 300px;
+    font-size: 13px;
+    color: #9ca3af;
+  }
+
+  /* Main */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top bar */
+  .top-bar {
+    height: 60px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background: white;
+    font-weight: 500;
+  }
+
+  /* Chat input */
+  .chat-input-wrapper {
+    margin-top: 140px;
+    padding: 20px;
+  }
+
+  .chat-input-container {
+    position: relative;
+    max-width: 950px;
+    margin: auto;
+  }
+
+  .chat-textarea {
+    width: 100%;
+    padding: 20px;
+    padding-bottom: 72px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    resize: none;
+    font-size: 14px;
+  }
+
+  .chat-textarea:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #d1d5db;
+  }
+
+  /* Controls */
+  .chat-controls {
+    position: absolute;
+    bottom: 15px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  /* Dropdown button */
+  .dropdown-toggle {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    color: #374151 !important;
+  }
+
+  .dropdown-toggle:hover {
+    background: #f3f4f6 !important;
+  }
+
+  .dropdown-toggle:focus,
+  .dropdown-toggle:active,
+  .dropdown-toggle:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #e5e7eb !important;
+    background: #ffffff !important;
+  }
+
+  .dropdown.show .dropdown-toggle {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+  }
+
+  /* Dropdown menu */
+  .dropdown-menu {
+    border-radius: 12px;
+    font-size: 13px;
+    min-width: 80px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .12);
+  }
+
+  .dropdown-item:hover {
+    background: #f3f4f6;
+  }
+
+  /* Generate button */
+  .generate-btn {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #d1d5db;
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 13px;
+  }
+
+  .generate-btn:hover {
+    background-color: #f3f4f6 !important;
+  }
+
+  .generate-btn:active,
+  .generate-btn.active,
+  .generate-btn:focus,
+  .generate-btn:focus-visible {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: #d1d5db !important;
+  }
+
+  /* OUTPUT */
+  .output-wrapper {
+    margin-top: 140px;
+    padding: 10px;
+    width: 100%;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Text box */
+  .output-text {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    text-align: justify;
+  }
+
+  .output-title {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+
+  .output-content {
+    font-size: 15px;
+    color: #111827;
+    line-height: 1.6;
+  }
+
+  /* Bottom bar */
+  .output-bar {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 10px 14px;
+  }
+
+  /* Buttons */
+  .output-btn {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: #000 !important;
+  }
+
+  .output-btn:hover {
+    background: #f3f4f6 !important;
+  }
+
+  /* Play button (center highlight) */
+  .play-btn {
+    background: #111827 !important;
+    color: #ffffff !important;
+    border-radius: 999px;
+    padding: 8px 26px;
+    font-size: 14px;
+    border: none;
+  }
+
+  .play-btn:hover {
+    background: #000000 !important;
+  }
+
+  .play-btn:focus {
+    box-shadow: none !important;
+  }
+
+  .word {
+    transition: color 0.2s linear;
+  }
+
+  .word.active {
+    color: #2563eb;
+  }
+</style>
+
+<body>
+
+  <div class="wrapper">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div>
+        <h6>Chats</h6>
+        <div class="chat-item">New Chat</div>
+      </div>
+      <div class="your-chats">Your chats</div>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+      <div class="top-bar">Voice Over Tool</div>
+
+      <div class="chat-input-wrapper">
+        <div class="chat-input-container">
+
+          <textarea class="chat-textarea" rows="4" placeholder="Send a message..."></textarea>
+
+          <div class="chat-controls">
+
+            <!-- 6 DROPDOWNS -->
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">Voice</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Male</a></li>
+                <li><a class="dropdown-item" href="#">Female</a></li>
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">Similarity</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Low</a></li>
+                <li><a class="dropdown-item" href="#">Medium</a></li>
+                <li><a class="dropdown-item" href="#">High</a></li>
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">Stability</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Low</a></li>
+                <li><a class="dropdown-item" href="#">Medium</a></li>
+                <li><a class="dropdown-item" href="#">High</a></li>
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">Style</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Normal</a></li>
+                <li><a class="dropdown-item" href="#">Creative</a></li>
+                <li><a class="dropdown-item" href="#">Formal</a></li>
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">Deploy</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Test</a></li>
+                <li><a class="dropdown-item" href="#">Live</a></li>
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">Attempts</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">1</a></li>
+                <li><a class="dropdown-item" href="#">3</a></li>
+                <li><a class="dropdown-item" href="#">5</a></li>
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown">Language</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">English</a></li>
+                <li><a class="dropdown-item" href="#">Urdu</a></li>
+                <li><a class="dropdown-item" href="#">Arabic</a></li>
+              </ul>
+            </div>
+
+
+            <div class="flex-grow-1"></div>
+
+            <button class="btn btn-sm generate-btn">Generate</button>
+
+          </div>
+        </div>
+      </div>
+      <div class="output-wrapper d-none" id="outputArea">
+        <div class="output-text"></div>
+
+        <div class="output-bar d-flex justify-content-between align-items-center">
+          <div class="dropdown">
+            <button class="btn dropdown-toggle output-btn" data-bs-toggle="dropdown">
+              Details
+            </button>
+            <ul class="dropdown-menu" id="detailsList"></ul>
+          </div>
+          <audio id="voiceAudio">
+          </audio>
+
+          <button class="btn output-btn" id="playBtn">▶ Play</button>
+          <button class="btn output-btn" id="downloadBtn">⬇ Download</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
